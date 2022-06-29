@@ -3,7 +3,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.8.1/firebase-app.js";
 //import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js";
 
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.8.1/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut  } from "https://www.gstatic.com/firebasejs/9.8.1/firebase-auth.js";
 
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -39,13 +39,12 @@ apiKey: "AIzaSyC7toNkMv-wUJiasgVlPy42MQrymuah96o",
   appId: "1:131854706929:web:2192579afe3f4c5515e150"
 };
 
-console.log('hola')
 export const app = initializeApp(firebaseConfig);
 
 
 export const db = getFirestore();
 
-export const auth = getAuth(app);
+export const auth = getAuth();
 
 
 
@@ -56,18 +55,56 @@ export const auth = getAuth(app);
       // User is signed in, see docs for a list of available properties
       // https://firebase.google.com/docs/reference/js/firebase.User
       const uid = user.uid;
+     
+    
+     
       // ...
     } else {
       // User is signed out
+      console.log("usuario NO logueado")
       // ...
     }
   });
+
+
+  export const cerrarSesion = () =>
+  signOut(auth).then(() => {
+    // Sign-out successful.
+    window.location.href = 'index.html';
+  }).catch((error) => {
+    // An error happened.
+  });
   
 
-var userID = localStorage.getItem("UserID");
-var destination = localStorage.getItem("destino");
 
-console.log("users/"+userID)
+  
+/**
+   *@param {string} email the description of the Task
+   *@param {string} password the description of the Task
+*/
+
+  export const aloka = (auth, email, password) =>
+  createUserWithEmailAndPassword(auth,email, password)
+  .then((userCredential) => {
+    // Signed in
+    const user = userCredential.user;
+    localStorage.setItem("UserID", userCredential.user.uid);
+    window.location.href = 'home.html';
+    
+    // ...
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    console.log(errorMessage);
+    // ..
+  });
+
+ 
+var userID = localStorage.getItem("UserID");
+//var destination = localStorage.getItem("destino");
+
+//console.log("users/"+userID)
 
 //var holaperfil = "/users/"+userID+"negocio";
 
@@ -77,7 +114,7 @@ var pruebas = "/users/nOQszCqK8vUqRZ08RkheqwDibgy2/tareas"
 //console.log(holaperfil)
 
 
-var hola = "/users";
+var holas = userID ;
 //console.log(holaperfil)
 
 
@@ -102,7 +139,7 @@ var hola = "/users";
 //});
 
 
-      const holas = "/users/"+userID+"/"+destination;
+   //const holas = "/users/"+userID+"/"+destination;
 console.log(holas)
 
 /**
@@ -111,26 +148,13 @@ console.log(holas)
  * @param {string} description the description of the Task
  * @param {string} cantidad the description of the Task
  * @param {string} uid the description of the Task
- * @param {string} email the description of the Task
- * @param {string} password the description of the Task
+ 
  */
 //export const saveTask = (title, description) =>
   //addDoc(collection(db,  'users'), { title, description });
 
 
-  export const aver = createUserWithEmailAndPassword(auth, email, password) => 
-  {
-  then((userCredential) => {
-    // Signed in
-    const user = userCredential.user;
-    // ...
-  })
-  .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    // ..
-  });
-};
+  
   export const saveTask = (title, description, cantidad, uid) =>
   addDoc(collection(db,  holas),  { title, description, cantidad, uid });
 
